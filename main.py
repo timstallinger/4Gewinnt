@@ -1,21 +1,30 @@
 # Importieren der Pygame-Bibliothek
 import pygame
 
+
+class Game:
+    Feld = [[-1 for i in range(7)] for i in range(6)] #Feld hat 6 Reihen und 7 Spalten
+    def __str__(self):
+        for i in self.Feld:
+            print(i)
+
 # initialisieren von pygame
 pygame.init()
 
 # genutzte Farbe
 ORANGE = (255, 140, 0)
+GELB = (255, 0, 0)
+BLAU = (0, 0, 255)
 ROT = (255, 0, 0)
 GRUEN = (0, 255, 0)
 SCHWARZ = (0, 0, 0)
 WEISS = (255, 255, 255)
 
 # Fenster öffnen
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((700, 600))
 
 # Titel für Fensterkopf
-pygame.display.set_caption("Unser erstes Pygame-Spiel")
+pygame.display.set_caption("4 Gewinnt")
 
 # solange die Variable True ist, soll das Spiel laufen
 spielaktiv = True
@@ -31,7 +40,6 @@ while spielaktiv:
             spielaktiv = False
             print("Spieler hat Quit-Button angeklickt")
         elif event.type == pygame.KEYDOWN:
-            print("Spieler hat Taste gedrückt")
 
             # Taste für Spieler 1
             if event.key == pygame.K_RIGHT:
@@ -55,9 +63,12 @@ while spielaktiv:
     # Spiellogik hier integrieren
 
     # Spielfeld löschen
-    screen.fill(WEISS)
+    screen.fill(BLAU)
 
     # Spielfeld/figuren zeichnen
+    for i in range(7):
+        for j in range(6):
+            pygame.draw.circle(screen,WEISS,(i * 2 * 50 + 50,j * 2 * 50 + 50),40)
 
     # Fenster aktualisieren
     pygame.display.flip()
