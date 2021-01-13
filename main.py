@@ -1,16 +1,68 @@
-# This is a sample Python script.
+# Importieren der Pygame-Bibliothek
+import pygame
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# initialisieren von pygame
+pygame.init()
 
+# genutzte Farbe
+ORANGE = (255, 140, 0)
+ROT = (255, 0, 0)
+GRUEN = (0, 255, 0)
+SCHWARZ = (0, 0, 0)
+WEISS = (255, 255, 255)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+# Fenster öffnen
+screen = pygame.display.set_mode((640, 480))
 
+# Titel für Fensterkopf
+pygame.display.set_caption("Unser erstes Pygame-Spiel")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# solange die Variable True ist, soll das Spiel laufen
+spielaktiv = True
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# Bildschirm Aktualisierungen einstellen
+clock = pygame.time.Clock()
+
+# Schleife Hauptprogramm
+while spielaktiv:
+    # Überprüfen, ob Nutzer eine Aktion durchgeführt hat
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            spielaktiv = False
+            print("Spieler hat Quit-Button angeklickt")
+        elif event.type == pygame.KEYDOWN:
+            print("Spieler hat Taste gedrückt")
+
+            # Taste für Spieler 1
+            if event.key == pygame.K_RIGHT:
+                print("Spieler hat Pfeiltaste rechts gedrückt")
+            elif event.key == pygame.K_LEFT:
+                print("Spieler hat Pfeiltaste links gedrückt")
+            elif event.key == pygame.K_DOWN:
+                print("Spieler hat Pfeiltaste runter gedrückt")
+
+            # Taste für Spieler 2
+            elif event.key == pygame.K_a:
+                print("Spieler hat Taste a gedrückt")
+            elif event.key == pygame.K_s:
+                print("Spieler hat Taste s gedrückt")
+            elif event.key == pygame.K_d:
+                print("Spieler hat Taste d gedrückt")
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            print("Spieler hast Maus angeklickt")
+
+    # Spiellogik hier integrieren
+
+    # Spielfeld löschen
+    screen.fill(WEISS)
+
+    # Spielfeld/figuren zeichnen
+
+    # Fenster aktualisieren
+    pygame.display.flip()
+
+    # Refresh-Zeiten festlegen
+    clock.tick(60)
+
+pygame.quit()
