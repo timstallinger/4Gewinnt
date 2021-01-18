@@ -79,7 +79,7 @@ while spielaktiv:
                 Spiel.zeigerPosition = min(Spiel.zeigerPosition + 1, 6)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            print("Spieler hast Maus angeklickt")
+            print("Spieler hat Maus angeklickt")
 
     # Spiellogik hier integrieren
 
