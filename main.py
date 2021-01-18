@@ -1,12 +1,6 @@
 # Importieren der Pygame-Bibliothek
 import pygame
-
-
-class Game:
-    Feld = [[-1 for i in range(7)] for i in range(6)] #Feld hat 6 Reihen und 7 Spalten
-    def __str__(self):
-        for i in self.Feld:
-            print(i)
+import random
 
 # initialisieren von pygame
 pygame.init()
@@ -21,7 +15,7 @@ SCHWARZ = (0, 0, 0)
 WEISS = (255, 255, 255)
 
 # Fenster öffnen
-screen = pygame.display.set_mode((700, 600))
+screen = pygame.display.set_mode((700, 700))
 
 # Titel für Fensterkopf
 pygame.display.set_caption("4 Gewinnt")
@@ -31,6 +25,25 @@ spielaktiv = True
 
 # Bildschirm Aktualisierungen einstellen
 clock = pygame.time.Clock()
+
+
+class Game:
+    Feld = [[-1 for i in range(7)] for i in range(6)] #Feld hat 6 Reihen und 7 Spalten
+    amZug = ROT
+    zeigerPosition = 3 #Feldauswahl
+
+    def __init__(self):
+        zufall = random.randint(0, 1)
+        if zufall:
+            self.amZug = ROT
+        else:
+            self.amZug = ORANGE
+
+    def __str__(self):
+        for i in self.Feld:
+            print(i)
+
+Spiel = Game()
 
 # Schleife Hauptprogramm
 while spielaktiv:
@@ -43,19 +56,27 @@ while spielaktiv:
 
             # Taste für Spieler 1
             if event.key == pygame.K_RIGHT:
-                print("Spieler hat Pfeiltaste rechts gedrückt")
+                if Spiel.amZug != ROT:
+                    continue
+                Spiel.zeigerPosition = min(Spiel.zeigerPosition + 1, 6)
             elif event.key == pygame.K_LEFT:
-                print("Spieler hat Pfeiltaste links gedrückt")
+                if Spiel.amZug != ROT:
+                    continue
+                Spiel.zeigerPosition = max(Spiel.zeigerPosition - 1, 0)
             elif event.key == pygame.K_DOWN:
-                print("Spieler hat Pfeiltaste runter gedrückt")
+                Spiel.amZug = ORANGE
 
             # Taste für Spieler 2
             elif event.key == pygame.K_a:
-                print("Spieler hat Taste a gedrückt")
+                if Spiel.amZug != ORANGE:
+                    continue
+                Spiel.zeigerPosition = max(Spiel.zeigerPosition - 1, 0)
             elif event.key == pygame.K_s:
-                print("Spieler hat Taste s gedrückt")
+                Spiel.amZug = ROT
             elif event.key == pygame.K_d:
-                print("Spieler hat Taste d gedrückt")
+                if Spiel.amZug != ORANGE:
+                    continue
+                Spiel.zeigerPosition = min(Spiel.zeigerPosition + 1, 6)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             print("Spieler hast Maus angeklickt")
@@ -66,8 +87,11 @@ while spielaktiv:
     screen.fill(BLAU)
 
     # Spielfeld/figuren zeichnen
-    for i in range(7):
-        for j in range(6):
+    for i in range(7): #Breite
+        #TODO: entfernen
+        if i == Spiel.zeigerPosition:
+            pygame.draw.circle(screen, Spiel.amZug, (i * 2 * 50 + 50, 50), 40) #Zeigerfeld
+        for j in range(1,7): # Höhe, um eins nach unter versetzt, damit der Zeiger angezeigt werden kann
             pygame.draw.circle(screen,WEISS,(i * 2 * 50 + 50,j * 2 * 50 + 50),40)
 
     # Fenster aktualisieren
