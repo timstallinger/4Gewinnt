@@ -28,20 +28,95 @@ clock = pygame.time.Clock()
 
 
 class Game:
-    Feld = [[-1 for i in range(7)] for i in range(6)] #Feld hat 6 Reihen und 7 Spalten
-    amZug = ROT
-    zeigerPosition = 3 #Feldauswahl
+    Feld = [[-1 for i in range(7)] for i in range(6)]  # Feld hat 6 Reihen und 7 Spalten
+    amZug = 0
+    zeigerPosition = 3  # Feldauswahl
 
     def __init__(self):
-        zufall = random.randint(0, 1)
-        if zufall:
-            self.amZug = ROT
-        else:
-            self.amZug = ORANGE
+        self.amZug = random.randint(0, 1)
+        self.zeigerPosition = 3
 
     def __str__(self):
         for i in self.Feld:
             print(i)
+
+    def getSpielerColor(self):
+        if self.amZug == 0:
+            return ROT
+        return ORANGE
+
+    def getStoneColor(self,x,y):
+        if self.Feld[x][y] == 0:
+            return ROT
+        elif self.Feld[x][y] == 1:
+            return ORANGE
+        return WEISS
+
+    def spielerWechsel(self):
+        self.amZug = (self.amZug + 1) % 2
+        self.zeigerPosition = 3
+
+    def dropStone(self):
+        lowstone = 5
+        try:
+            while self.Feld[lowstone][self.zeigerPosition] != -1:
+                lowstone -= 1
+        except:
+            print("Alarm")
+            return 0
+        self.Feld[lowstone][self.zeigerPosition] = self.amZug
+        for Reihe in self.Feld:
+            print(Reihe)
+        self.checkWin(lowstone,self.zeigerPosition)
+        self.spielerWechsel()
+        return 1
+
+
+    def checkWaagerecht(self,x):
+        Reihe = 0
+        Spieler = -1
+        for Element in self.Feld[x]:
+            if Element == -1: continue
+            if Spieler == Element:
+                Reihe += 1
+            else:
+                Reihe = 1
+                Spieler = Element
+            if Reihe == 4:
+                print("WIN")
+                return
+
+
+    def checkVertikal(self,y):
+        Reihe = 0
+        Spieler = -1
+        for i in range(len(self.Feld)-1):
+            Element = self.Feld[5-i][y]
+            if Element == -1: continue
+            if Spieler == Element:
+                Reihe += 1
+            else:
+                Reihe = 1
+                Spieler = Element
+            if Reihe == 4:
+                print("WIN")
+                return
+
+
+    def checkWin(self,x,y):
+        self.checkVertikal(y)
+        self.checkWaagerecht(x)
+        '''for i in range(x-4, x+4):
+            for j in range(y-4,y+4):
+                if i > len(self.Feld) -1: break
+                if j > len(self.Feld[i]): break
+                if i < 0: break
+                if j < 0: continue'''
+
+
+
+
+
 
 Spiel = Game()
 
@@ -54,27 +129,31 @@ while spielaktiv:
             print("Spieler hat Quit-Button angeklickt")
         elif event.type == pygame.KEYDOWN:
 
-            # Taste für Spieler 1
+            # Taste für Spieler 0
             if event.key == pygame.K_RIGHT:
-                if Spiel.amZug != ROT:
+                if Spiel.amZug != 0:
                     continue
                 Spiel.zeigerPosition = min(Spiel.zeigerPosition + 1, 6)
             elif event.key == pygame.K_LEFT:
-                if Spiel.amZug != ROT:
+                if Spiel.amZug != 0:
                     continue
                 Spiel.zeigerPosition = max(Spiel.zeigerPosition - 1, 0)
             elif event.key == pygame.K_DOWN:
-                Spiel.amZug = ORANGE
+                if Spiel.amZug != 0:
+                    continue
+                Spiel.dropStone()
 
-            # Taste für Spieler 2
+            # Taste für Spieler 1
             elif event.key == pygame.K_a:
-                if Spiel.amZug != ORANGE:
+                if Spiel.amZug != 1:
                     continue
                 Spiel.zeigerPosition = max(Spiel.zeigerPosition - 1, 0)
             elif event.key == pygame.K_s:
-                Spiel.amZug = ROT
+                if Spiel.amZug != 1:
+                    continue
+                Spiel.dropStone()
             elif event.key == pygame.K_d:
-                if Spiel.amZug != ORANGE:
+                if Spiel.amZug != 1:
                     continue
                 Spiel.zeigerPosition = min(Spiel.zeigerPosition + 1, 6)
 
@@ -90,9 +169,10 @@ while spielaktiv:
     for i in range(7): #Breite
         #TODO: entfernen
         if i == Spiel.zeigerPosition:
-            pygame.draw.circle(screen, Spiel.amZug, (i * 2 * 50 + 50, 50), 40) #Zeigerfeld
-        for j in range(1,7): # Höhe, um eins nach unter versetzt, damit der Zeiger angezeigt werden kann
-            pygame.draw.circle(screen,WEISS,(i * 2 * 50 + 50,j * 2 * 50 + 50),40)
+            pygame.draw.circle(screen, Spiel.getSpielerColor(), (i * 2 * 50 + 50, 50), 40) #Zeigerfeld
+        for j in range(0, 6):
+            pygame.draw.circle(screen, Spiel.getStoneColor(j,i), (i * 2 * 50 + 50, (j+1) * 2 * 50 + 50), 40)
+            # Höhe, um eins nach unter versetzt, damit der Zeiger angezeigt werden kann
 
     # Fenster aktualisieren
     pygame.display.flip()
