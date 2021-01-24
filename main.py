@@ -28,7 +28,7 @@ clock = pygame.time.Clock()
 
 
 class Game:
-    Feld = [[-1 for i in range(7)] for i in range(6)]  # Feld hat 6 Reihen und 7 Spalten
+    Feld = [[-1 for i in range(7)] for j in range(6)]  # Feld hat 6 Reihen und 7 Spalten
     amZug = 0
     zeigerPosition = 3  # Feldauswahl
 
@@ -102,23 +102,33 @@ class Game:
                 print("WIN")
                 return
 
+    def checkDiagonalcount(self,x,y, count=0, rechts=0, links=0):
+        try:
+            if self.Feld[x][y] != self.amZug or x >= len(self.Feld):
+                return count
+        except:
+            print(count)
+            return count
+        if rechts == 1 or rechts == -1:
+            return self.checkDiagonalcount(x+rechts,y+rechts,count+1,rechts, links)
+        if links == 1 or links == -1:
+            return self.checkDiagonalcount(x+links,y-links,count+1,rechts, links)
+        else: print("rechts,links")
+
+    def checkDiagonal(self,x,y):
+        opt = self.checkDiagonalcount(x, y, rechts=1) + self.checkDiagonalcount(x, y, rechts=-1) - 1
+        opt2 = self.checkDiagonalcount(x, y, links=1) + self.checkDiagonalcount(x, y, links=-1) - 1
+        if max(opt,opt2) >= 4:
+            print("WIN")
 
     def checkWin(self,x,y):
         self.checkVertikal(y)
         self.checkWaagerecht(x)
-        '''for i in range(x-4, x+4):
-            for j in range(y-4,y+4):
-                if i > len(self.Feld) -1: break
-                if j > len(self.Feld[i]): break
-                if i < 0: break
-                if j < 0: continue'''
+        self.checkDiagonal(x,y)
 
 
-
-
-
-
-Spiel = Game()
+if __name__ == "__main__":
+    Spiel = Game()
 
 # Schleife Hauptprogramm
 while spielaktiv:
