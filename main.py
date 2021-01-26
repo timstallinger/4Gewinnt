@@ -62,7 +62,6 @@ class Game:
             while self.Feld[lowstone][self.zeigerPosition] != -1:
                 lowstone -= 1
         except:
-            print("Alarm")
             return 0
         self.Feld[lowstone][self.zeigerPosition] = self.amZug
         for Reihe in self.Feld:
@@ -70,7 +69,6 @@ class Game:
         self.checkWin(lowstone,self.zeigerPosition)
         self.spielerWechsel()
         return 1
-
 
     def checkWaagerecht(self,x):
         Reihe = 0
@@ -107,13 +105,11 @@ class Game:
             if self.Feld[x][y] != self.amZug or x >= len(self.Feld):
                 return count
         except:
-            print(count)
             return count
         if rechts == 1 or rechts == -1:
             return self.checkDiagonalcount(x+rechts,y+rechts,count+1,rechts, links)
         if links == 1 or links == -1:
             return self.checkDiagonalcount(x+links,y-links,count+1,rechts, links)
-        else: print("rechts,links")
 
     def checkDiagonal(self,x,y):
         opt = self.checkDiagonalcount(x, y, rechts=1) + self.checkDiagonalcount(x, y, rechts=-1) - 1
@@ -127,8 +123,7 @@ class Game:
         self.checkDiagonal(x,y)
 
 
-if __name__ == "__main__":
-    Spiel = Game()
+Spiel = Game()
 
 # Schleife Hauptprogramm
 while spielaktiv:
@@ -170,16 +165,12 @@ while spielaktiv:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             print("Spieler hat Maus angeklickt")
 
-    # Spiellogik hier integrieren
-
-    # Spielfeld löschen
-    screen.fill(BLAU)
-
     # Spielfeld/figuren zeichnen
-    for i in range(7): #Breite
+    screen.fill(BLAU)
+    for i in range(7):  # Breite
         #TODO: entfernen
         if i == Spiel.zeigerPosition:
-            pygame.draw.circle(screen, Spiel.getSpielerColor(), (i * 2 * 50 + 50, 50), 40) #Zeigerfeld
+            pygame.draw.circle(screen, Spiel.getSpielerColor(), (i * 2 * 50 + 50, 50), 40)  # Zeigerfeld
         for j in range(0, 6):
             pygame.draw.circle(screen, Spiel.getStoneColor(j,i), (i * 2 * 50 + 50, (j+1) * 2 * 50 + 50), 40)
             # Höhe, um eins nach unter versetzt, damit der Zeiger angezeigt werden kann
