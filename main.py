@@ -31,13 +31,14 @@ spielaktiv = True
 
 
 class Game:
-    Feld = [[-1 for i in range(7)] for j in range(6)]  # Feld hat 6 Reihen und 7 Spalten
+    Feld = []
     amZug = 0
     zeigerPosition = 3  # Feldauswahl
 
     def __init__(self):
         self.amZug = random.randint(0, 1)
         self.zeigerPosition = 3
+        self.Feld = [[-1 for i in range(7)] for j in range(6)]  # Feld hat 6 Reihen und 7 Spalten
 
     def __str__(self):
         for i in self.Feld:
@@ -132,15 +133,19 @@ class Game:
         return 0
 
     def checkWin(self, x, y):
-        global spielaktiv
         if self.checkVertikal(y) == 1 or self.checkWaagerecht(x) == 1 or self.checkDiagonal(x, y) == 1:
+            self.reset()
             hauptmenu(self.getSpielerColorstr())
+            global spielaktiv
             spielaktiv = False
 
+    def reset(self):
+        self.Feld = [[-1 for i in range(7)] for j in range(6)]
 
-# Spiel = Game()
-def main():
-    Spiel = Game()
+
+Spiel = Game()
+def spielschleife():
+    Spiel.__init__() # Anfangsvariablen wiederherstellen für den 2. Spielstart
     # Schleife Hauptprogramm
     global spielaktiv
 
@@ -215,7 +220,7 @@ def hauptmenu(winplayer=None):
                 hauptmenu = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 hauptmenu = False
-                main()
+                spielschleife()
         screen.fill(WEISS)
 
         if winplayer is not None:
